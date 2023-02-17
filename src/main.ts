@@ -9,7 +9,10 @@ const start = async () => {
     const app = await NestFactory.create(AppModule);
     app.setGlobalPrefix('api/');
     app.use(cookieParser());
-    app.enableCors();
+    app.enableCors({
+      origin: 'http://localhost:3020',
+      credentials: true,
+    });
 
     const config = new DocumentBuilder()
       .setTitle('Money manager')
