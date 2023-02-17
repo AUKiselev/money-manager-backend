@@ -1,13 +1,34 @@
-// import { User } from './../schemas/user.schema';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
-  readonly login: string;
+  @ApiProperty({
+    example: 'test@email.com',
+    description: 'Почта пользователя',
+  })
   readonly email: string;
+
+  @ApiProperty({
+    example: 'Случайная строка(генерируется автоматически)',
+    description: 'ID пользователя',
+  })
   readonly id: string;
 
+  @ApiProperty({
+    example: 'Иван',
+    description: 'Имя пользователя',
+  })
+  readonly firstName?: string;
+
+  @ApiProperty({
+    example: 'Иванов',
+    description: 'Фамилия пользователя',
+  })
+  readonly lastName?: string;
+
   constructor(model) {
-    this.login = model.login;
     this.email = model.email;
     this.id = model._id;
+    if (model.firstName) this.firstName = model.firstName;
+    if (model.lastName) this.lastName = model.lastName;
   }
 }

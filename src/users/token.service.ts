@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import { Token, TokenDocument } from './schemas/token.schema';
-import { ITokens } from './interfaces/tokens.model';
+import { ITokens, IDeleteTokenData } from './interfaces/tokens.model';
 
 @Injectable()
 export class TokenService {
@@ -36,5 +36,34 @@ export class TokenService {
 
     const token = await this.tokenModel.create({ user: userId, refreshToken });
     return token;
+  }
+
+  async removeToken(refreshToken: string): Promise<IDeleteTokenData> {
+    const { acknowledged, deletedCount } = await this.tokenModel.deleteOne({
+      refreshToken,
+    });
+
+    return {
+      acknowledged,
+      deletedCount,
+    };
+  }
+
+  validateToken(token: string, key: string) {
+    try {
+      const userData = jwt.verify(token, key);
+
+      return userData;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async findToken(refreshToken: string) {
+    const tokenData = await this.tokenModel.findOne({
+      refreshToken,
+    });
+
+    return tokenData;
   }
 }
