@@ -111,7 +111,11 @@ export class UsersController {
       });
 
       return userData;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+
+      return e;
+    }
   }
 
   // TODO Убрать это отсюда
