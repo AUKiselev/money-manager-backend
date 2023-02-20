@@ -1,7 +1,7 @@
 import { Income } from './schemas/income.schema';
-import { UpdateIncomeDto } from './dto/update-income.dto';
+import { UpdateIncomeDto } from './dtos/update-income.dto';
 import { ObjectId } from 'mongoose';
-import { CreateIncomeDto } from './dto/create-income.dto';
+import { CreateIncomeDto } from './dtos/create-income.dto';
 import { IncomeService } from './income.service';
 import {
   Body,

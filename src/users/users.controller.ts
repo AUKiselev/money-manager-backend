@@ -1,5 +1,4 @@
 import { HttpException } from '@nestjs/common';
-// import { AuthGuard } from './guards/auth.guard';
 import { AuthUserDto } from './dtos/auth-user.dto';
 import { UsersService } from './users.service';
 import {
@@ -10,7 +9,6 @@ import {
   Req,
   Res,
   HttpStatus,
-  // UseGuards,
 } from '@nestjs/common';
 import { RegistrationUserDto } from './dtos/registration-user.dto';
 import { Response, Request } from 'express';

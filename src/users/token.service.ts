@@ -2,7 +2,7 @@ import { UserDto } from './dtos/user.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as jwt from 'jsonwebtoken';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Token, TokenDocument } from './schemas/token.schema';
 import { ITokens, IDeleteTokenData } from './interfaces/tokens.model';
 
@@ -27,7 +27,7 @@ export class TokenService {
     };
   }
 
-  async saveToken(userId: string, refreshToken: string): Promise<Token> {
+  async saveToken(userId: ObjectId, refreshToken: string): Promise<Token> {
     const tokenData = await this.tokenModel.findOne({ user: userId });
     if (tokenData) {
       tokenData.refreshToken = refreshToken;

@@ -1,3 +1,4 @@
+import { BillModule } from './bill/bill.module';
 import { IncomeModule } from './income/income.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     ),
     IncomeModule,
     UsersModule,
+    BillModule,
   ],
 })
 export class AppModule {}

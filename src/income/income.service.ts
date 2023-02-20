@@ -1,9 +1,9 @@
-import { CreateIncomeDto } from './dto/create-income.dto';
+import { CreateIncomeDto } from './dtos/create-income.dto';
 import { Income, IncomeDocument } from './schemas/income.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { UpdateIncomeDto } from './dto/update-income.dto';
+import { UpdateIncomeDto } from './dtos/update-income.dto';
 
 @Injectable()
 export class IncomeService {

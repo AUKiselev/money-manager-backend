@@ -1,6 +1,8 @@
+import { BillModule } from './../bill/bill.module';
 import { TokenService } from './token.service';
 import { Token, TokenSchema } from './schemas/token.schema';
 import {
+  forwardRef,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -16,9 +18,11 @@ import { AccessTokenMiddleware } from 'src/middlewares/access-token.middleware';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+    forwardRef(() => BillModule),
   ],
   controllers: [UsersController],
   providers: [UsersService, TokenService],
+  exports: [UsersService],
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

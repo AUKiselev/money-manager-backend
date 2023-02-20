@@ -1,22 +1,29 @@
+import { CreateBillDto } from './../bill/dtos/create-bill.dto';
 import { TokenService } from './token.service';
 import {
+  forwardRef,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dtos/user.dto';
 import { IRegistrationData } from './interfaces/users.model';
+import { Bill } from 'src/bill/schemas/bill.schema';
+import { BillService } from 'src/bill/bill.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private tokenService: TokenService,
+    @Inject(forwardRef(() => BillService))
+    private billService: BillService,
   ) {}
 
   async registration(
@@ -41,6 +48,13 @@ export class UsersService {
       firstName,
       lastName,
     });
+
+    const billModel = {
+      name: 'Наличные',
+      user: user._id,
+    };
+    const billDto = new CreateBillDto(billModel);
+    await this.billService.create(billDto);
 
     const userDto = new UserDto(user);
     const tokens = this.tokenService.generateTokens({ ...userDto });
@@ -116,5 +130,14 @@ export class UsersService {
     const users = this.userModel.find();
 
     return users;
+  }
+
+  async addNewBill(userId: ObjectId, bill: Bill) {
+    const user = await this.userModel.findById(userId);
+    user.bills.push(bill);
+
+    await user.save();
+
+    return bill;
   }
 }

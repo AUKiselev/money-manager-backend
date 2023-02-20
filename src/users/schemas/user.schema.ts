@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { Bill } from 'src/bill/schemas/bill.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -33,6 +35,12 @@ export class User {
   })
   @Prop()
   lastName: string;
+
+  @ApiProperty({
+    description: 'Массив счетов пользователя',
+  })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bill' }] })
+  bills: Bill[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
