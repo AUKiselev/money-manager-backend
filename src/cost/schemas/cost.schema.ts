@@ -4,13 +4,13 @@ import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { User } from 'src/users/schemas/user.schema';
 
-export type IncomeDocument = HydratedDocument<Income>;
+export type CostDocument = HydratedDocument<Cost>;
 
 @Schema()
-export class Income {
+export class Cost {
   @ApiProperty({
-    example: 'Зарплата',
-    description: 'Название статьи дохода',
+    example: 'Продукты',
+    description: 'Название статьи расхода',
   })
   @Prop({ required: true })
   name: string;
@@ -24,8 +24,16 @@ export class Income {
   sum: number;
 
   @ApiProperty({
+    example: 1000,
+    description: 'Лимит расхода',
+    default: 0,
+  })
+  @Prop({ default: 0 })
+  limit: number;
+
+  @ApiProperty({
     example: '',
-    description: 'Иконка статьи дохода',
+    description: 'Иконка статьи расхода',
     default: '',
   })
   @Prop()
@@ -35,4 +43,4 @@ export class Income {
   user: User;
 }
 
-export const IncomeSchema = SchemaFactory.createForClass(Income);
+export const CostSchema = SchemaFactory.createForClass(Cost);

@@ -1,3 +1,6 @@
+import { CreateCostDto } from './../cost/dtos/create-cost.dto';
+import { IncomeService } from './../income/income.service';
+import { CreateIncomeDto } from './../income/dtos/create-income.dto';
 import { CreateBillDto } from './../bill/dtos/create-bill.dto';
 import { TokenService } from './token.service';
 import {
@@ -9,13 +12,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dtos/user.dto';
 import { IRegistrationData } from './interfaces/users.model';
-import { Bill } from 'src/bill/schemas/bill.schema';
 import { BillService } from 'src/bill/bill.service';
+import { CostService } from 'src/cost/cost.service';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +27,10 @@ export class UsersService {
     private tokenService: TokenService,
     @Inject(forwardRef(() => BillService))
     private billService: BillService,
+    @Inject(forwardRef(() => IncomeService))
+    private incomeService: IncomeService,
+    @Inject(forwardRef(() => CostService))
+    private costService: CostService,
   ) {}
 
   async registration(
@@ -54,8 +61,27 @@ export class UsersService {
       user: user._id,
     };
     const billDto = new CreateBillDto(billModel);
-    await this.billService.create(billDto);
+    const bill = await this.billService.create(billDto);
+    user.bills.push(bill);
 
+    const incomeModel = {
+      name: 'Зарплата',
+      user: user._id,
+    };
+    const incomeDto = new CreateIncomeDto(incomeModel);
+    const income = await this.incomeService.create(incomeDto);
+    user.incomes.push(income);
+
+    const costModel = {
+      name: 'Продукты',
+      user: user._id,
+    };
+    const costDto = new CreateCostDto(costModel);
+    const cost = await this.costService.create(costDto);
+    user.costs.push(cost);
+
+    await user.save();
+    user.populate(['bills', 'incomes', 'costs']);
     const userDto = new UserDto(user);
     const tokens = this.tokenService.generateTokens({ ...userDto });
 
@@ -65,7 +91,9 @@ export class UsersService {
   }
 
   async login(email: string, password: string): Promise<IRegistrationData> {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel
+      .findOne({ email })
+      .populate(['bills', 'incomes', 'costs']);
     if (!user) {
       throw new HttpException(
         'Неверный логин или пароль',
@@ -117,7 +145,9 @@ export class UsersService {
     const { id } = userData as {
       id: string;
     };
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel
+      .findById(id)
+      .populate(['bills', 'incomes', 'costs']);
     const userDto = new UserDto(user);
     const tokens = this.tokenService.generateTokens({ ...userDto });
 
@@ -130,14 +160,5 @@ export class UsersService {
     const users = this.userModel.find();
 
     return users;
-  }
-
-  async addNewBill(userId: ObjectId, bill: Bill) {
-    const user = await this.userModel.findById(userId);
-    user.bills.push(bill);
-
-    await user.save();
-
-    return bill;
   }
 }

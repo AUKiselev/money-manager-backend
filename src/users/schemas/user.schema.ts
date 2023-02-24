@@ -1,8 +1,10 @@
+import { Income } from './../../income/schemas/income.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Bill } from 'src/bill/schemas/bill.schema';
+import { Cost } from 'src/cost/schemas/cost.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -41,6 +43,18 @@ export class User {
   })
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bill' }] })
   bills: Bill[];
+
+  @ApiProperty({
+    description: 'Массив доходов пользователя',
+  })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Income' }] })
+  incomes: Income[];
+
+  @ApiProperty({
+    description: 'Массив расходов пользователя',
+  })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cost' }] })
+  costs: Cost[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

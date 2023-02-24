@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 
-export class CreateIncomeDto {
+export class CreateCostDto {
   @ApiProperty({
-    example: 'Зарплата',
-    description: 'Название статьи дохода',
+    example: 'Наличные',
+    description: 'Название статьи расхода',
   })
   readonly name: string;
 
