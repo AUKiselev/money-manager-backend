@@ -16,8 +16,9 @@ export class IncomeService {
     return income;
   }
 
-  async getAll(): Promise<Income[]> {
-    const incomes = await this.incomeModel.find();
+  async getAllById(userId: ObjectId): Promise<Income[]> {
+    const incomes = await this.incomeModel.find({ user: userId });
+
     return incomes;
   }
 

@@ -32,15 +32,15 @@ export class IncomeController {
   }
 
   @ApiOperation({
-    summary: 'Получить все объекты дохода пользователя',
+    summary: 'Получить все объекты дохода по ID пользователя',
   })
   @ApiResponse({
     status: 200,
     type: [Income],
   })
-  @Get()
-  getAll() {
-    return this.incomeService.getAll();
+  @Get(':userId')
+  getAll(@Param('userId') userId: ObjectId) {
+    return this.incomeService.getAllById(userId);
   }
 
   @ApiOperation({

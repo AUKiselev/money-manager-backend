@@ -37,9 +37,9 @@ export class CostController {
     status: 200,
     type: [Cost],
   })
-  @Get(':user-id')
-  getAll(@Param('user-id') userId: ObjectId) {
-    return this.costService.getAll(userId);
+  @Get(':userId')
+  getAll(@Param('userId') userId: ObjectId) {
+    return this.costService.getAllById(userId);
   }
 
   @ApiOperation({

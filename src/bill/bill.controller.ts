@@ -38,9 +38,9 @@ export class BillController {
     status: 200,
     type: [Bill],
   })
-  @Get(':user-id')
-  getAll(@Param('user-id') userId: ObjectId) {
-    return this.billService.getAll(userId);
+  @Get(':userId')
+  getAll(@Param('userId') userId: ObjectId) {
+    return this.billService.getAllById(userId);
   }
 
   @ApiOperation({

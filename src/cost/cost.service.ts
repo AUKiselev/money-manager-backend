@@ -1,21 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { UsersService } from './../users/users.service';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-
 import { CreateCostDto } from './dtos/create-cost.dto';
 import { UpdateCostDto } from './dtos/update-cost.dto';
 import { Cost, CostDocument } from './schemas/cost.schema';
 
 @Injectable()
 export class CostService {
-  constructor(@InjectModel(Cost.name) private costModel: Model<CostDocument>) {}
+  constructor(
+    @InjectModel(Cost.name) private costModel: Model<CostDocument>,
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
+  ) {}
 
   async create(dto: CreateCostDto): Promise<Cost> {
     const cost = await this.costModel.create({ ...dto, sum: 0, icon: '' });
     return cost;
   }
 
-  async getAll(userId: ObjectId): Promise<Cost[]> {
+  async getAllById(userId: ObjectId): Promise<Cost[]> {
     const costs = await this.costModel.find({ user: userId });
 
     return costs;

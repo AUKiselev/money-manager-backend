@@ -14,7 +14,7 @@ export class BillService {
     return bill;
   }
 
-  async getAll(userId: ObjectId): Promise<Bill[]> {
+  async getAllById(userId: ObjectId): Promise<Bill[]> {
     const bills = await this.billModel.find({ user: userId });
 
     return bills;
