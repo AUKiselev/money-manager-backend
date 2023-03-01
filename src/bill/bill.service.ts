@@ -10,7 +10,7 @@ export class BillService {
   constructor(@InjectModel(Bill.name) private billModel: Model<BillDocument>) {}
 
   async create(dto: CreateBillDto): Promise<Bill> {
-    const bill = await this.billModel.create({ ...dto, sum: 0, icon: '' });
+    const bill = await this.billModel.create({ ...dto, icon: '' });
     return bill;
   }
 

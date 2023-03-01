@@ -9,6 +9,12 @@ export class CreateBillDto {
   readonly name: string;
 
   @ApiProperty({
+    example: 1000,
+    description: 'Количество денег на счету',
+  })
+  readonly sum?: number;
+
+  @ApiProperty({
     description: 'ID пользователя, добавляется автоматически',
   })
   readonly user: ObjectId;
@@ -16,5 +22,6 @@ export class CreateBillDto {
   constructor(model) {
     this.name = model.name;
     this.user = model.user;
+    this.sum = model.sum;
   }
 }
