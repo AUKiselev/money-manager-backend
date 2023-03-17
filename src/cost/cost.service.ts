@@ -14,11 +14,15 @@ export class CostService {
     private usersService: UsersService,
   ) {}
 
-  async create(dto: CreateCostDto): Promise<Cost> {
-    const cost = await this.costModel.create({ ...dto, sum: 0, icon: '' });
+  async create(dto: CreateCostDto, addToUser = true): Promise<Cost> {
+    const cost = await this.costModel.create({ ...dto, sum: 0 });
+
+    if (addToUser) {
+      this.usersService.addNewCost(cost);
+    }
+
     return cost;
   }
-
   async getAllById(userId: ObjectId): Promise<Cost[]> {
     const costs = await this.costModel.find({ user: userId });
 
@@ -31,13 +35,13 @@ export class CostService {
     if (dto.name) {
       cost.name = dto.name;
     }
-    if (dto.sum) {
+    if (typeof +dto.sum === 'number') {
       cost.sum = dto.sum;
     }
     if (dto.icon) {
       cost.icon = dto.icon;
     }
-    if (dto.limit) {
+    if (typeof +dto.sum === 'number') {
       cost.limit = dto.limit;
     }
 

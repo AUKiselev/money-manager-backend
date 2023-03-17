@@ -1,18 +1,26 @@
 import { CreateIncomeDto } from './dtos/create-income.dto';
 import { Income, IncomeDocument } from './schemas/income.schema';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { UpdateIncomeDto } from './dtos/update-income.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class IncomeService {
   constructor(
     @InjectModel(Income.name) private incomeModel: Model<IncomeDocument>,
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
   ) {}
 
-  async create(dto: CreateIncomeDto): Promise<Income> {
-    const income = await this.incomeModel.create({ ...dto, sum: 0, icon: '' });
+  async create(dto: CreateIncomeDto, addToUser = true): Promise<Income> {
+    const income = await this.incomeModel.create({ ...dto, sum: 0 });
+
+    if (addToUser) {
+      this.usersService.addNewIncome(income);
+    }
+
     return income;
   }
 
@@ -33,7 +41,7 @@ export class IncomeService {
     if (dto.name) {
       income.name = dto.name;
     }
-    if (dto.sum) {
+    if (typeof +dto.sum === 'number') {
       income.sum = dto.sum;
     }
     if (dto.icon) {

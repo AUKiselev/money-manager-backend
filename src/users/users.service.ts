@@ -19,6 +19,9 @@ import { UserDto } from './dtos/user.dto';
 import { IRegistrationData } from './interfaces/users.model';
 import { BillService } from 'src/bill/bill.service';
 import { CostService } from 'src/cost/cost.service';
+import { Income } from 'src/income/schemas/income.schema';
+import { Cost } from 'src/cost/schemas/cost.schema';
+import { Bill } from 'src/bill/schemas/bill.schema';
 
 @Injectable()
 export class UsersService {
@@ -58,26 +61,29 @@ export class UsersService {
 
     const billModel = {
       name: 'Наличные',
+      icon: 'iconoir:lot-of-cash',
       user: user._id,
     };
     const billDto = new CreateBillDto(billModel);
-    const bill = await this.billService.create(billDto);
+    const bill = await this.billService.create(billDto, false);
     user.bills.push(bill);
 
     const incomeModel = {
       name: 'Зарплата',
+      icon: 'material-symbols:computer-outline-rounded',
       user: user._id,
     };
     const incomeDto = new CreateIncomeDto(incomeModel);
-    const income = await this.incomeService.create(incomeDto);
+    const income = await this.incomeService.create(incomeDto, false);
     user.incomes.push(income);
 
     const costModel = {
       name: 'Продукты',
+      icon: 'pajamas:food',
       user: user._id,
     };
     const costDto = new CreateCostDto(costModel);
-    const cost = await this.costService.create(costDto);
+    const cost = await this.costService.create(costDto, false);
     user.costs.push(cost);
 
     await user.save();
@@ -156,8 +162,29 @@ export class UsersService {
     return { ...tokens, user: userDto };
   }
 
+  async addNewIncome(income: Income) {
+    const user = await this.userModel.findById(income.user);
+
+    user.incomes.push(income);
+    await user.save();
+  }
+
+  async addNewBill(bill: Bill) {
+    const user = await this.userModel.findById(bill.user);
+
+    user.bills.push(bill);
+    await user.save();
+  }
+
+  async addNewCost(cost: Cost) {
+    const user = await this.userModel.findById(cost.user);
+
+    user.costs.push(cost);
+    await user.save();
+  }
+
   async getAllUsers(): Promise<User[]> {
-    const users = this.userModel.find();
+    const users = await this.userModel.find();
 
     return users;
   }
