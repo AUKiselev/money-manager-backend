@@ -1,10 +1,11 @@
-import { BillModule } from './bill/bill.module';
-import { IncomeModule } from './income/income.module';
+import { BillModule } from './modules/bill/bill.module';
+import { IncomeModule } from './modules/income/income.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { CostModule } from './cost/cost.module';
+import { CostModule } from './modules/cost/cost.module';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -14,10 +15,11 @@ import { CostModule } from './cost/cost.module';
     MongooseModule.forRoot(
       `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.037yt4h.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
     ),
-    IncomeModule,
     UsersModule,
+    IncomeModule,
     BillModule,
     CostModule,
+    TransactionModule,
   ],
 })
 export class AppModule {}

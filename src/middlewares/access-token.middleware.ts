@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { TokenService } from 'src/users/token.service';
+import { TokenService } from '../modules/users/token.service';
 
 @Injectable()
 export class AccessTokenMiddleware implements NestMiddleware {
