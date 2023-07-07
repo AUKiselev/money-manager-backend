@@ -14,6 +14,11 @@ export class CreateTransactionDto {
   readonly type: 'INCOME' | 'EXPENSE' | 'TRANSFER';
 
   @ApiProperty({
+    description: 'Дата создания транзакции в формате Timestamp',
+  })
+  readonly createDate: number;
+
+  @ApiProperty({
     description:
       'Счет, с которого совершена транзация(только типы "TRANSFER" и "EXPENSE")',
   })

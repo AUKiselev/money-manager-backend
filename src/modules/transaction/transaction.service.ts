@@ -27,8 +27,6 @@ export class TransactionService {
   ) {}
 
   async create(dto: CreateTransactionDto): Promise<Transaction> {
-    const createDate = Date.now();
-
     if (Number.isNaN(dto.value)) {
       throw new HttpException(
         'Переданы неверные данные',
@@ -37,7 +35,6 @@ export class TransactionService {
     }
 
     const transactionData = {
-      createDate,
       ...dto,
     };
 
@@ -68,7 +65,7 @@ export class TransactionService {
       billToBD.sum += dto.value;
       await this.billService.updateOne(billTo, billToBD);
 
-      const billFromBD = await this.billService.getOneById(billTo);
+      const billFromBD = await this.billService.getOneById(billFrom);
       billFromBD.sum -= dto.value;
       await this.billService.updateOne(billFrom, billFromBD);
     }
